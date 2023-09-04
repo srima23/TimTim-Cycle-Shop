@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>TimTim Cycle Shop</title>
+     <meta charset="UTF-8">
+    <title>Cycle List</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            border: 1px solid #ccc;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f2f2f2;
+        }
+
+        tr:hover {
+            background-color: #ddd;
+        }
+
+        .stock {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 4px 2px;
+            cursor: pointer;
+        }
+
+        .stock:hover {
+            background-color: rgb(143, 240, 164);
+        }
+
+        form {
+            display: inline;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            margin-bottom: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+
+        button[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button[type="submit"]:hover {
+            background-color: rgb(143, 240, 164);
+        }
+    </style>
+</head>
+<body>
+    <h1>Welcome to TimTim Cycle Shop </h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Brand</th>
+                <th>Status</th>
+                <th>Stock</th>
+                
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="cycle : ${cycles}">
+                <td th:text="${cycle.id}"></td>
+                <td th:text="${cycle.brand}"></td>
+               <td th:text="${cycle.available ? 'Available' : 'Not Available'}"></td>
+                <td th:text="${cycle.stock}"></td>
+                
+                <td>
+                    <form th:action="@{/cycles/borrow/{id}(id=${cycle.id})}" method="post">
+                        <button th:if="${cycle.available}" type="submit">Borrow</button>
+                    </form>
+                    <form th:action="@{/cycles/return/{id}(id=${cycle.id})}" method="post">
+                        <button th:unless="${cycle.available}" type="submit">Return</button>
+                       
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+                     <a href="/cycles/stock">
+						 <button class="stock">
+                                    Restock
+                                 </button> 
+					 </a>   
+    <h2>Add a New Cycle</h2>
+    <form th:action="@{cycles/add}" method="post">
+        <label for="brand">Brand:</label>
+        <input type="text" id="brand" name="brand" required /><br>
+<!--
+        <label for="model">Model:</label>
+        <input type="text" id="model" name="model" required /><br>-->
+
+        <label for="stock">Stock:</label>
+        <input type="number" id="stock" name="stock" required min="0" /><br>
+
+        <button type="submit">Add Cycle</button>
+    </form>
+</body>
+</html>
